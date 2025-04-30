@@ -1,7 +1,6 @@
 use std::io::{self, Write};
-use std::fs::{self, File};
+use std::fs;
 use serde::{Serialize, Deserialize};
-
 const ERR_FLUSH_MSG: &str = "Failed to STD Flush";
 const ERR_WFILE_MSG: &str = "Failed to write file";
 const ERR_RFILE_MSG: &str = "Failed to read file";
@@ -89,7 +88,7 @@ fn clear_screen() {
 fn load_json() -> Vec<Task> {
     if let Ok(json) = fs::read_to_string(JSON_PATH) {
         serde_json::from_str(&json).unwrap_or_else( |_| {
-            eprintln!("Failed to parse JSON, starting with empty list");
+            eprintln!("{}, starting with empty list", ERR_RFILE_MSG);
             Vec::new()
         })
     } else {
